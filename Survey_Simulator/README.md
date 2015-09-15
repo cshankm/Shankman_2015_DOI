@@ -16,7 +16,7 @@ num_to_track.txt - this specifies the number of objects the Survey Simulator nee
 H_dist_vars.txt  - this specifies the parameters of the H-distribution to be tested
 
 
-#Workflow:
+# Workflow:
 
 - Driver.py (run this file)
    -> calls GiMiObj to draw model object
@@ -25,29 +25,29 @@ H_dist_vars.txt  - this specifies the parameters of the H-distribution to be tes
    -> writes outputs
 
 
-##Driver.py
-###Inputs
-*input.file	       - a file containing the name of the input orbital model file (essentially the ouptu of "wc -l filename > input.file")
-*seeds.txt    	       - a file containing the seed for the simulation
-*number_to_track.txt   - a file containing the desired number of tracked objects from the survey simulator
-*surveydir.txt 	       - a file contianing the name of the folder containing the survey characterisations 
-*H_dist_vars.txt       - a file contianing the parameters of the H-distribution. See Shankman et al. 2015, or SSimTools.py for a description of the parameters
+## Driver.py
+### Inputs
+* input.file	       - a file containing the name of the input orbital model file (essentially the ouptu of "wc -l filename > input.file")
+* seeds.txt    	       - a file containing the seed for the simulation
+* number_to_track.txt   - a file containing the desired number of tracked objects from the survey simulator
+* surveydir.txt 	       - a file contianing the name of the folder containing the survey characterisations 
+* H_dist_vars.txt       - a file contianing the parameters of the H-distribution. See Shankman et al. 2015, or SSimTools.py for a description of the parameters
 
-###Outputs
-*detections.dat        - a file containing all of the simulator-detected objects
-*tracked.dat	       - a file containing all of the detected objects which were tracked
-*drawn.dat 	       - a file containing the first 5000 model-drawn objects
-
-
+### Outputs
+* detections.dat        - a file containing all of the simulator-detected objects
+* tracked.dat	       - a file containing all of the detected objects which were tracked
+* drawn.dat 	       - a file containing the first 5000 model-drawn objects
 
 
 
-#Survey Characterisations
+
+
+# Survey Characterisations
 
 The folder "ALL" contains the characterisations and pointings for CFEPS (+ its 2 extensions), Alexandersen et al. 2015, and the first quarter of OSSOS.
 There are two kinds of files:
 
-*\*.eff   	  - the efficiency files for each block of each survey. For more documentation, see the readme files in ALL
-*pointings.list   - a list of the patch of the sky for each characterised survey block 
+* \*.eff   	  - the efficiency files for each block of each survey. For more documentation, see the readme files in ALL
+* pointings.list   - a list of the patch of the sky for each characterised survey block 
 
 The efficiency files and template.eff describe the format of these files
