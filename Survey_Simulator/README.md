@@ -12,16 +12,16 @@ The Survey Simulator was written in Fortran (included here as SurveySubs.f) and 
 
 There are two files you may immediately want to edit:
 
-num_to_track.txt - this specifies the number of objects the Survey Simulator needs to track
-H_dist_vars.txt  - this specifies the parameters of the H-distribution to be tested
+* num_to_track.txt - this specifies the number of objects the Survey Simulator needs to track
+* H_dist_vars.txt  - this specifies the parameters of the H-distribution to be tested
 
 
 # Workflow:
 
 * Driver.py (run this file)
-  * calls GiMiObj to draw model object
-    * uses ssimTools.py tools
-  * calls the compiled version of SurveySubs.f with an object to check for detection, returns if it was and what it's detected characteristics are
+  * calls GiMiObj to select a model object
+    * this uses ssimTools.py tools to generate an H magnitude
+  * calls the compiled version of SurveySubs.f with an object to check for detection, returns if it was detected and if so, what its detected characteristics are
   * writes outputs
 
 
