@@ -1,0 +1,2 @@
+#alpha_faint, alpha_bright, hmax, hmin, hbreak, contrast
+0.5 0.9 13.5 4 8.3 1.5
