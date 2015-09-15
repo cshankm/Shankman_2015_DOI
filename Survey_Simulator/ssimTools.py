@@ -131,6 +131,7 @@ def drawH(alpha, hmax, alpha_faint=None, contrast=1, hbreak=None, hmin=1):
 
         # Merge the x axes into one array 
         xp = np.concatenate([xpb, xpf])
+        # Pad first element with the minimum H value (essentially setting it up properly with correct bin edges)
         iv.xp = np.zeros(len(xp)+1)+hmin
         iv.xp[1:] = xp
         
@@ -141,7 +142,8 @@ def drawH(alpha, hmax, alpha_faint=None, contrast=1, hbreak=None, hmin=1):
         # Merge them and then cumulate and normalzie
         y = np.concatenate([yb,yf]).cumsum()
         y = y/max(y)
-
+        
+        #Pad cumulative distribution with a 0 as all cumulatives should start there
         iv.y = np.zeros(len(y) +1)
         iv.y[1:] = y
 
@@ -153,10 +155,7 @@ def drawH(alpha, hmax, alpha_faint=None, contrast=1, hbreak=None, hmin=1):
     rv2 = np.random.rand(size)
     # Flip x and y and interpolate it for input y's, thus given an array of x's (H values)
     iv.H = np.interp(rv2, iv.y, iv.xp)
-    # There is some error where the smallest H value gets over represented. 
-    # This is corrected for by cutting out that part
-#    iv.H = iv.H[iv.H>hmin]
-    # This requires the length of the array to be stored
+    # Store the initial length of the H array
     iv.Hl = len(iv.H)
     # The counter is set to 1 as the first element will already be returned
     iv.Hi = 1

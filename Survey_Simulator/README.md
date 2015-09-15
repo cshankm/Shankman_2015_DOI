@@ -6,9 +6,15 @@ Jones et al. 2006: [http://adsabs.harvard.edu/abs/2006Icar..185..508J](http://ad
 
 Petit et al. 2011: [http://adsabs.harvard.edu/abs/2011AJ....142..131P](http://adsabs.harvard.edu/abs/2011AJ....142..131P)
 
-Here we provide an implementation of the Survey Simulator to examine the absolute magnitude distribution (H) of the Scattering TNOs. For a detailed description of our methods and statistical techniques, see Shankman et al. 2015. Here we are set-up to forward bias the Kaib et al. 2011 orbital model of scattering objects (q200_scattering_hot_alt1k_aei.dat), with a given H-distribution.
+Here we provide an implementation of the Survey Simulator to examine the absolute magnitude distribution (H) of the Scattering TNOs. For a detailed description of our methods and statistical techniques, see Shankman et al. 2015. Here we are set-up to forward bias the Kaib et al. 2011 orbital model of scattering objects (q200_scattering_hot_alt1k_aei.dat), with a given H-distribution. For a description of the paramaterisation of H-magnitudes, see Shankman et al. 2013 or Shankman et al. 2015.
 
 The Survey Simulator was written in Fortran (included here as SurveySubs.f) and has a python wrapper (Driver.py). SurveySubs.f must be compiled on your machine, and then Driver.py can simply be executed with the command "python problem.py". The simulator runs until it has "detected" a specified number of objects, continually drawing test objects from the model until this criteria is satisfied.
+
+To compile SurveySubs.f with f2py, use a command like:
+
+f2py -c --f77exec=/usr/bin/gfortran --f77flags=-fPIC -m SurveySubs SurveySubs.f
+
+You may need to change the path to your gfortan compiler, if it is located elsewhere.
 
 There are two files you may immediately want to edit:
 
@@ -19,8 +25,8 @@ There are two files you may immediately want to edit:
 # Workflow:
 
 * Driver.py (run this file)
-  * calls GiMiObj to select a model object
-    * this uses ssimTools.py tools to generate an H magnitude
+  * calls GiMiObj, which, at each call, returns one object with orbital parameters, colour conversion list (e.g. g-r), H-magnitude, and phase curve information
+    * this uses ssimTools.py tools to generate an H magnitude and for writing output
   * calls the compiled version of SurveySubs.f with an object to check for detection, returns if it was detected and if so, what its detected characteristics are
   * writes outputs
 
@@ -31,7 +37,7 @@ There are two files you may immediately want to edit:
 * seeds.txt    	       - a file containing the seed for the simulation
 * number_to_track.txt   - a file containing the desired number of tracked objects from the survey simulator
 * surveydir.txt 	       - a file contianing the name of the folder containing the survey characterisations 
-* H_dist_vars.txt       - a file contianing the parameters of the H-distribution. See Shankman et al. 2015, or SSimTools.py for a description of the parameters
+* H_dist_vars.txt       - a file contianing the parameters of the H-distribution. See Shankman et al. 2013, Shankman et al. 2015, or SSimTools.py for a description of the parameters
 
 ### Outputs
 * detections.dat        - a file containing all of the simulator-detected objects
