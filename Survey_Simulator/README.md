@@ -1,20 +1,36 @@
-This DOI provides a Survey Simulator as a tool to analyze the observations of Trans-Neptunian Objects (TNOs) from [CFEPS](http://adsabs.harvard.edu/abs/2011AJ....142..131P), [Alexandersen et al. 2015](http://arxiv.org/abs/1411.7953) and [OSSOS](http://www.ossos-survey.org/). This DOI is offered as a companion to Shankman et al. 2015, which analyses the Scattering TNOs from these surveys.
+This document provides description of the SurveySimulator package.
+The SurveySimulator software package simulates the detection of a model distribution of Trans-Neptunian Objects (TNOs) subject to the detection characteristics of a given survey. 
+This package proivides the SureveySimulator software as well as the characterization files for the three TNO surveys: [CFEPS](http://adsabs.harvard.edu/abs/2011AJ....142..131P), [Alexandersen et al. 2015](http://arxiv.org/abs/1411.7953) and [OSSOS](http://www.ossos-survey.org/). 
+This version of the package is offered as a companion to Shankman et al. 2015, (an analyses the H magnitude distribution Scattering TNOs)
 
-TNO surveys have a number of strong observational biases. In order to meaningfully interpret the observations, these biases must be taken into consideration so that conclusions can be drawn about the intrinsic TNO populations being observed. Each of the above surveys has been carefully characterised and has measured their intrinsic biases. These biases are recorded in the \*.eff files stored in the directory "ALL". The Survey Simulator takes a straightforward approach to handling the observational biases. It is not possible to take the observed population and de-bias them to know what the intrinsic populations is. One simply can't know what they didn't see. Instead, the Survey Simulator takes a model for the intrinsic distribution of objects in the Solar System and applies the survey's known biases. A model is forward biased through the Survey Simulator to produce a set of "Simulated Detections" that can then be compared to the real detected sample. For details on the inner workings of the Survey Simulator, see the following paper:
+TNO surveys have a number of strong observational biases. 
+To draw meaningfully conclusions regarding the intrinsic distribution of TNOs these biases must be taken into consideration. 
+Each of the above mentioned surveys has been carefully designed to minimize tracking biases and have had their detection biases carefully characterised. 
+The characterisics of the observational biases are recorded in the \*.eff files stored in the directory "ALL". 
+
+The Survey Simulator takes a straightforward approach to handling the observational biases. 
+As one can not know what was not seen in a particular survey, discovering the intrinsic TNO distribution by de-biasing the observed sample is not possible. 
+Instead, the Survey Simulator takes a model for the intrinsic distribution of TNOs and applies the survey's measured detection biases. 
+A model is forward biased through the Survey Simulator to produce a set of "Simulated Detections" that can then be compared to the actual detected sample. 
+The SurveySimulator executes a loop, continuously drawn objects from a model until a specified number of sources have been "detected"
+The following papers provide some details on the design of the Survey Simulator:
 
 Jones et al. 2006: [http://adsabs.harvard.edu/abs/2006Icar..185..508J](http://adsabs.harvard.edu/abs/2006Icar..185..508J)
 
 Petit et al. 2011: [http://adsabs.harvard.edu/abs/2011AJ....142..131P](http://adsabs.harvard.edu/abs/2011AJ....142..131P)
 
-Here we provide an implementation of the Survey Simulator to examine the absolute magnitude distribution (H) of the Scattering TNOs. For a detailed description of our methods and statistical techniques, see Shankman et al. 2015. Here we are set-up to forward bias the Kaib et al. 2011 orbital model of scattering objects (q200_scattering_hot_alt1k_aei.dat), with a given H-distribution. For a description of the paramaterisation of H-magnitudes, see Shankman et al. 2013 or Shankman et al. 2015.
+Here we provide the implementation of the Survey Simulator we used to examine the absolute magnitude distribution (H) of the Scattering TNOs. 
+The SurveySimulator is written in Fortran (included here as SurveySubs.f) with a python wrapper (Driver.py). 
+SurveySubs.f must be compiled on your machine, and then the Driver.py module is call from within a python script, e.g. "python problem.py".
+Using the SurveySimulator we forward biased the Kaib et al. 2011 orbital model of scattering objects (q200_scattering_hot_alt1k_aei.dat) joined with a given H-distribution. 
+For a description of the paramaterisation of H-magnitudes and details on our statisical techniques, see Shankman et al. 2015
 
-The Survey Simulator was written in Fortran (included here as SurveySubs.f) and has a python wrapper (Driver.py). SurveySubs.f must be compiled on your machine, and then Driver.py can simply be executed with the command "python problem.py". The simulator runs until it has "detected" a specified number of objects, continually drawing test objects from the model until this criteria is satisfied.
 
 To compile SurveySubs.f with f2py, use a command like:
 
 f2py -c --f77exec=/usr/bin/gfortran --f77flags=-fPIC -m SurveySubs SurveySubs.f
 
-You may need to change the path to your gfortan compiler, if it is located elsewhere.
+You may need to change the path to your gfortan compiler.
 
 There are two files you may immediately want to edit:
 
@@ -27,33 +43,31 @@ There are two files you may immediately want to edit:
 * Driver.py (run this file)
   * calls GiMiObj, which, at each call, returns one object with orbital parameters, colour conversion list (e.g. g-r), H-magnitude, and phase curve information
     * this uses ssimTools.py tools to generate an H magnitude and for writing output
-  * calls the compiled version of SurveySubs.f with an object to check for detection, returns if it was detected and if so, what its detected characteristics are
+  * calls the *detect*  method within SurveySimulator.f with the given object to check for detection, returning the detected characteristics if the object is declared as detected. 
   * writes outputs
 
 
 ## Driver.py
 ### Inputs
-* input.file	       - a file containing the name of the input orbital model file (essentially the ouptu of "wc -l filename > input.file")
+* input.file	       - a file containing the name of the output of `wc -l filename`
 * seeds.txt    	       - a file containing the seed for the simulation
-* number_to_track.txt   - a file containing the desired number of tracked objects from the survey simulator
-* surveydir.txt 	       - a file contianing the name of the folder containing the survey characterisations 
-* H_dist_vars.txt       - a file contianing the parameters of the H-distribution. See Shankman et al. 2013, Shankman et al. 2015, or SSimTools.py for a description of the parameters
+* number_to_track.txt  - a file containing the desired number of tracked objects from the survey simulator
+* surveydir.txt 	   - a file containing the name of the folder containing the survey characterisations 
+* H_dist_vars.txt      - a file containing the parameters of the H-distribution. See Shankman et al. 2013, Shankman et al. 2015, or SSimTools.py for a description of the parameters
 
 ### Outputs
-* detections.dat        - a file containing all of the simulator-detected objects
+* detections.dat       - a file containing all of the simulator-detected objects
 * tracked.dat	       - a file containing all of the detected objects which were tracked
 * drawn.dat 	       - a file containing the first 5000 model-drawn objects
 
 
-
-
-
 # Survey Characterisations
 
-The folder "ALL" contains the characterisations and pointings for CFEPS (+ its 2 extensions), Alexandersen et al. 2015, and the first quarter of OSSOS.
-There are two kinds of files:
+The folder "ALL" contains the characterisations and pointings for the Canada-France Ecliptic Plane Survey (+ its 2 extensions), 
+Alexandersen et al. 2015, and the first quarter dataset of the Outer Solar System Origins Survey (OSSOS).
+There are two types of files within this folder:
 
-* \*.eff   	  - the efficiency files for each block of each survey. For more documentation, see the readme files in ALL
-* pointings.list   - a list of the patch of the sky for each characterised survey block 
+* \*.eff   	       - characterization files for the given block of a survey. For more documentation, see the readme files in ALL
+* pointings.list   - the patches of the sky for each characterised survey block 
 
 The efficiency files and template.eff describe the format of these files
